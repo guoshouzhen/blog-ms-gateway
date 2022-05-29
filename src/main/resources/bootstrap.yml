@@ -1,0 +1,53 @@
+server:
+  port: 8021
+
+spring:
+  profiles:
+    active: @env@
+  application:
+    name: blog-ms-gateway
+  cloud:
+    nacos:
+      # 注册中心
+      discovery:
+        server-addr: http://localhost:8848
+      # 配置中心
+      config:
+        file-extension: yaml
+        group: BLOG_GATEWAY
+        # # 不同环境使用Data ID做区分，命名空间和group为默认，配置中心中Data ID格式： ${prefix}-${spring.profiles.active}.${file-extension}
+        prefix: ${spring.application.name}
+        encode: UTF-8
+    # 网关
+    gateway:
+      discovery:
+        locator:
+          # 中注册中心获取服务
+          enabled: true
+      globalcors:
+        add-to-simple-url-handler-mapping: true
+        cors-configurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedHeaders: "Origin, X-Requested-With, Content-Type,Authorization,Token,Accept, Connection, User-Agent, Cookie,CallFrom,TerminalType,Guid,AccessToken,s,version,partner,markettrack"
+            allowedMethods: "*"
+
+# gateway配置
+gateway:
+  dynamicRoute:
+    enabled: true
+    dataType: nacos
+    # 暂不区分环境
+    dataId: ${spring.application.name}-routes
+    group: BLOG_GATEWAY
+
+#监控配置
+management:
+  endpoints:
+    web:
+      exposure:
+        #打开所有Actuator服务
+        include: '*'
+  metrics:
+    tags:
+      application: ${spring.application.name}

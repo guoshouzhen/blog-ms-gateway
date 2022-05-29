@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+	<springProperty scope="context" name="LOG_HOME" source="logging.loghome" />
+
+	<!-- %m输出的信息,%p日志级别,%thread线程名,%d日期,%c类的全名,%i索引【从数字0开始递增】 -->
+	<!-- appender是configuration的子节点，是负责写日志的组件。 -->
+	<!-- RollingFileAppender：日志滚动与拆分策略 -->
+	<!--SYS_FILE开发与测试调试日志生产环境关闭-->
+	<appender name="SYS_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<append>true</append>
+		<file>${LOG_HOME}/sys.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+			<FileNamePattern>${LOG_HOME}/sys.log-%d{yyyy-MM-dd}-%i.log.gz</FileNamePattern>
+			<!-- 超过30个月会清除之前的日志 -->
+			<MaxHistory>30</MaxHistory>
+			<!-- 日志总保存量为10GB -->
+			<totalSizeCap>10GB</totalSizeCap>
+			<!--文件达到 最大200MB时会被压缩和切割 -->
+			<maxFileSize>50MB</maxFileSize>
+			<cleanHistoryOnStart>true</cleanHistoryOnStart>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] %C.%M\(%F:%L\) [%X{TRACE_ID}]%m%n</pattern>
+			<charset>UTF-8</charset>
+		</encoder>
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>DEBUG</level>
+		</filter>
+	</appender>
+
+	<!-- LOG_FILE：info级别及以上日志 -->
+	<appender name="INFO_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<append>true</append>
+		<file>${LOG_HOME}/info.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+			<FileNamePattern>${LOG_HOME}/info.log-%d{yyyy-MM-dd}-%i.log.gz</FileNamePattern>
+			<!-- 超过30个月会清除之前的日志 -->
+			<MaxHistory>30</MaxHistory>
+			<!-- 日志总保存量为10GB -->
+			<totalSizeCap>10GB</totalSizeCap>
+			<!--文件达到 最大200MB时会被压缩和切割 -->
+			<maxFileSize>50MB</maxFileSize>
+			<cleanHistoryOnStart>true</cleanHistoryOnStart>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] %C.%M\(%F:%L\) [%X{TRACE_ID}]%m%n</pattern>
+			<charset>UTF-8</charset>
+		</encoder>
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>INFO</level>
+		</filter>
+	</appender>
+
+
+	<!-- LOG_FILE：warn级别及以上日志 -->
+	<appender name="WARN_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<append>true</append>
+		<file>${LOG_HOME}/warn.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+			<FileNamePattern>${LOG_HOME}/warn.log-%d{yyyy-MM-dd}-%i.log.gz</FileNamePattern>
+			<!-- 超过30个月会清除之前的日志 -->
+			<MaxHistory>30</MaxHistory>
+			<!-- 日志总保存量为10GB -->
+			<totalSizeCap>10GB</totalSizeCap>
+			<!--文件达到 最大200MB时会被压缩和切割 -->
+			<maxFileSize>50MB</maxFileSize>
+			<cleanHistoryOnStart>true</cleanHistoryOnStart>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] %C.%M\(%F:%L\) [%X{TRACE_ID}]%m%n</pattern>
+			<charset>UTF-8</charset>
+		</encoder>
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>WARN</level>
+		</filter>
+	</appender>
+
+	<!-- ERROR_FILE 错误级别日志 -->
+	<appender name="ERROR_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<append>true</append>
+		<file>${LOG_HOME}/error.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+			<FileNamePattern>${LOG_HOME}/error.log-%d{yyyy-MM-dd}-%i.log.gz</FileNamePattern>
+			<!-- 每产生一个日志文件，该日志文件的保存期限为30天 -->
+			<MaxHistory>30</MaxHistory>
+			<!-- 日志总保存量为10GB -->
+			<totalSizeCap>10GB</totalSizeCap>
+			<!--文件达到 最大200MB时会被压缩和切割 -->
+			<maxFileSize>50MB</maxFileSize>
+			<cleanHistoryOnStart>true</cleanHistoryOnStart>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] %C.%M\(%F:%L\) [%X{TRACE_ID}]%m%n</pattern>
+			<charset>UTF-8</charset>
+		</encoder>
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>ERROR</level>
+		</filter>
+	</appender>
+	<!-- %m输出的信息,%p日志级别,%thread线程名,%d日期,%c类的全名,%i索引【从数字0开始递增】 -->
+	<!-- appender是configuration的子节点，是负责写日志的组件。 -->
+	<!-- ConsoleAppender：把日志输出到控制台 -->
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] %C.%M\(%F:%L\) [%X{TRACE_ID}]%m%n</pattern>
+			<charset>UTF-8</charset>
+		</encoder>
+	</appender>
+
+	<!--第三方日志输出级别 -->
+	<logger name="org.springframework" level="WARN"/>
+
+	<!--多环境日志输出策略 -->
+	<springProfile name="dev">
+		<root level="DEBUG">
+			<appender-ref ref="STDOUT"/>
+			<appender-ref ref="SYS_FILE"/>
+			<appender-ref ref="INFO_FILE"/>
+			<appender-ref ref="WARN_FILE"/>
+			<appender-ref ref="ERROR_FILE"/>
+		</root>
+	</springProfile>
+
+	<springProfile name="prod">
+		<root level="INFO">
+			<appender-ref ref="INFO_FILE"/>
+			<appender-ref ref="WARN_FILE"/>
+			<appender-ref ref="ERROR_FILE"/>
+		</root>
+	</springProfile>
+
+</configuration>
