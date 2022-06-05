@@ -7,17 +7,6 @@ spring:
   application:
     name: blog-ms-gateway
   cloud:
-    nacos:
-      # 注册中心
-      discovery:
-        server-addr: http://localhost:8848
-      # 配置中心
-      config:
-        file-extension: yaml
-        group: BLOG_GATEWAY
-        # # 不同环境使用Data ID做区分，命名空间和group为默认，配置中心中Data ID格式： ${prefix}-${spring.profiles.active}.${file-extension}
-        prefix: ${spring.application.name}
-        encode: UTF-8
     # 网关
     gateway:
       discovery:
@@ -29,7 +18,7 @@ spring:
         cors-configurations:
           '[/**]':
             allowedOrigins: "*"
-            allowedHeaders: "Origin, X-Requested-With, Content-Type,Authorization,Token,Accept, Connection, User-Agent, Cookie,CallFrom,TerminalType,Guid,AccessToken,s,version,partner,markettrack"
+            allowedHeaders: "token,*"
             allowedMethods: "*"
 
 # gateway配置
@@ -51,3 +40,39 @@ management:
   metrics:
     tags:
       application: ${spring.application.name}
+
+---
+#开发环境配置
+spring:
+  profiles: dev
+  cloud:
+    nacos:
+      #注册中心
+      discovery:
+        server-addr: http://localhost:8848
+      #配置中心
+      config:
+        server-addr: http://localhost:8848
+        file-extension: yaml
+        group: BLOG_GATEWAY
+        #不同环境使用Data ID做区分，命名空间和group为默认，配置中心中Data ID格式： ${prefix}-${spring.profiles.active}.${file-extension}
+        prefix: ${spring.application.name}
+        encode: UTF-8
+
+---
+#生产环境配置
+spring:
+  profiles: prod
+  cloud:
+    nacos:
+      #注册中心
+      discovery:
+        server-addr: http://172.18.0.3:8848
+      #配置中心
+      config:
+        server-addr: http://172.18.0.3:8848
+        file-extension: yaml
+        group: BLOG_GATEWAY
+        # # 不同环境使用Data ID做区分，命名空间和group为默认，配置中心中Data ID格式： ${prefix}-${spring.profiles.active}.${file-extension}
+        prefix: ${spring.application.name}
+        encode: UTF-8

@@ -1,0 +1,11 @@
+#日志配置
+logging:
+  #日志路径配置
+  loghome: /root/appdata/blog/logs/gateway
+  #日志配置的路径
+  config: classpath:logback-custom.xml
+  #日志级别配置
+  level:
+    #nacos日志打印配置
+    alibaba:
+      nacos: info

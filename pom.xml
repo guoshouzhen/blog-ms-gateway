@@ -18,6 +18,9 @@
         <spring.cloud.version>Hoxton.SR9</spring.cloud.version>
         <spring.cloud.alibaba.version>2.2.6.RELEASE</spring.cloud.alibaba.version>
         <lombok.version>1.18.10</lombok.version>
+        <plugin-dockerfile-maven.version>1.4.13</plugin-dockerfile-maven.version>
+        <docker.repository.registry>registry.cn-hangzhou.aliyuncs.com</docker.repository.registry>
+        <docker.repository.namespace>blog-regs</docker.repository.namespace>
     </properties>
     <dependencies>
         <!--lombok 简化bean写法-->
@@ -104,7 +107,7 @@
 
     <build>
         <!--指定jar文件名-->
-        <finalName>blog-ms-auth</finalName>
+        <finalName>blog-ms-gateway</finalName>
         <plugins>
             <!--maven打包插件-->
             <plugin>
@@ -118,6 +121,31 @@
                 <configuration>
                     <delimiters>@</delimiters>
                     <useDefaultDelimiters>false</useDefaultDelimiters>
+                </configuration>
+            </plugin>
+            <!--docker镜像构建插件-->
+            <plugin>
+                <groupId>com.spotify</groupId>
+                <artifactId>dockerfile-maven-plugin</artifactId>
+                <version>${plugin-dockerfile-maven.version}</version>
+                <executions>
+                    <execution>
+                        <id>default</id>
+                        <goals>
+                            <goal>build</goal>
+                            <goal>push</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <!--maven setting.xml中配置阿里云镜像服务的用户名密码-->
+                    <useMavenSettingsForAuth>true</useMavenSettingsForAuth>
+                    <!--镜像名-->
+                    <repository>${docker.repository.registry}/${docker.repository.namespace}/${project.artifactId}</repository>
+                    <!--此处参数将传递给dockerfile，其中ARG指令引用即可-->
+                    <buildArgs>
+                        <JAR_FILE>${project.build.finalName}.jar</JAR_FILE>
+                    </buildArgs>
                 </configuration>
             </plugin>
 
