@@ -2,7 +2,8 @@
 
 #### 介绍
 基于spring boot及spring cloud gateway搭建的微服务，作为博客项目的微服务网关，所有请求的统一入口，根据请求路径中的服务名来转发请求到不同的服务。该网关使用动态路由，从nacos配置中心加载路由配置，好处是后续新增服务或者变更路由配置时，可自动加载最新路由配置，避免网关服务的停机。  
-关键词：spring boot，spring cloud gateway，nacos
+
+关键词：java，spring boot，spring cloud gateway，nacos
 
 #### 程序结构说明
 ```
